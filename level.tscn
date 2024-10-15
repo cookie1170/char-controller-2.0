@@ -1,38 +1,28 @@
-[gd_scene load_steps=4 format=4 uid="uid://0y71pn6xlwny"]
+[gd_scene load_steps=5 format=4 uid="uid://0y71pn6xlwny"]
 
 [ext_resource type="Texture2D" uid="uid://38bbgfs645hi" path="res://icon.svg" id="1_72sws"]
+[ext_resource type="PackedScene" uid="uid://cdaudi416meeb" path="res://player.tscn" id="2_erx3y"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_epuus"]
 texture = ExtResource("1_72sws")
 texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
-1:0/0 = 0
-2:0/0 = 0
-3:0/0 = 0
-0:1/0 = 0
-1:1/0 = 0
-2:1/0 = 0
-3:1/0 = 0
-0:2/0 = 0
-1:2/0 = 0
-6:2/0 = 0
-0:3/0 = 0
-1:3/0 = 0
-0:4/0 = 0
-1:4/0 = 0
-3:4/0 = 0
-0:5/0 = 0
-0:6/0 = 0
-5:6/0 = 0
+0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
 
 [sub_resource type="TileSet" id="TileSet_qgldr"]
 tile_size = Vector2i(128, 128)
+physics_layer_0/collision_layer = 1
 sources/0 = SubResource("TileSetAtlasSource_epuus")
 
 [node name="level" type="Node2D"]
 
+[node name="Player" parent="." instance=ExtResource("2_erx3y")]
+position = Vector2(-4, -19)
+
+[node name="Camera2D" type="Camera2D" parent="Player"]
+
 [node name="TileMapLayer" type="TileMapLayer" parent="."]
 modulate = Color(0.270222, 0.270222, 0.270222, 1)
 scale = Vector2(0.25, 0.25)
-tile_map_data = PackedByteArray("AAD9/wAAAAAAAAAAAAD+/wAAAAAAAAAAAAD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAD8/wAAAAAAAAAAAAD7/wAAAAAAAAAAAAD6/wAAAAAAAAAAAAD5/wAAAAAAAAAAAAD4/wAAAAAAAAAAAAA=")
+tile_map_data = PackedByteArray("AAD9/wAAAAAAAAAAAAD+/wAAAAAAAAAAAAD//wAAAAAAAAAAAAAAAAAAAAAAAAAAAAABAAAAAAAAAAAAAAACAAAAAAAAAAAAAAADAAAAAAAAAAAAAAAEAAAAAAAAAAAAAAAFAAAAAAAAAAAAAAAGAAAAAAAAAAAAAAAHAAAAAAAAAAAAAAD8/wAAAAAAAAAAAAD7/wAAAAAAAAAAAAD6/wAAAAAAAAAAAAD5/wAAAAAAAAAAAAD4/wAAAAAAAAAAAAABAP//AAAAAAAAAAABAP7/AAAAAAAAAAD8//z/AAAAAAAAAAD8//3/AAAAAAAAAAD8//7/AAAAAAAAAAD8////AAAAAAAAAAD5////AAAAAAAAAAD5//7/AAAAAAAAAAAAAPr/AAAAAAAAAAD9//j/AAAAAAAAAAD8//j/AAAAAAAAAAAAAPb/AAAAAAAAAAAAAPf/AAAAAAAAAAD8//T/AAAAAAAAAAD9//T/AAAAAAAAAAACAPP/AAAAAAAAAAADAPP/AAAAAAAAAAAEAPP/AAAAAAAAAAAFAPP/AAAAAAAAAAABAPP/AAAAAAAAAAABAPr/AAAAAAAAAAA=")
 tile_set = SubResource("TileSet_qgldr")

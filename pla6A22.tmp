@@ -44,7 +44,7 @@ position = Vector2(16, 0)
 target_position = Vector2(16, 0)
 
 [node name="HorizontalBlock" type="RayCast2D" parent="LedgeGrabRaycasts"]
-position = Vector2(16, -16)
+position = Vector2(16, 0)
 target_position = Vector2(16, 0)
 
 [node name="VerticalRaycast" type="RayCast2D" parent="LedgeGrabRaycasts"]

@@ -29,3 +29,12 @@ shape = SubResource("CircleShape2D_h6bod")
 [node name="CollisionBoxFeet" type="CollisionShape2D" parent="."]
 position = Vector2(0, 63)
 shape = SubResource("RectangleShape2D_0eumx")
+
+[node name="Timers" type="Node2D" parent="."]
+
+[node name="CoyoteTimer" type="Timer" parent="Timers"]
+unique_name_in_owner = true
+wait_time = 0.1
+one_shot = true
+
+[connection signal="timeout" from="Timers/CoyoteTimer" to="." method="_on_coyote_timeout"]

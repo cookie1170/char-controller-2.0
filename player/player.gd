@@ -21,10 +21,12 @@ class_name Player
 
 ## nodes
 @onready var coyote_timer : Timer = %CoyoteTimer
+@onready var buffer_timer : Timer = %BufferTimer
 @onready var collision_feet : CollisionShape2D = %CollisionBoxFeet
 
 ## other variables
 var can_jump : bool
+var short_jump : bool
 
 
 # processes physics (duh)
@@ -65,9 +67,17 @@ func _physics_process(delta: float) -> void:
 	else:
 		velocity.x = move_toward(velocity.x, 0, decel * delta)
 
-	# makes you jump if you press the jump button
-	if Input.is_action_just_pressed('jump') and can_jump:
+	# starts the buffer timer if you press jump
+	if Input.is_action_just_pressed('jump'):
+		buffer_timer.start()
+
+	# jumps if the buffer timer isn't stopped and you can jump
+	if not buffer_timer.is_stopped() and can_jump:
 		jump()
+
+	if (Input.is_action_just_released('jump') and gravity == jump_grav) or short_jump:
+		get_tree().create_tween().tween_property(self, 'velocity:y', 0, 0.1)
+		short_jump = false
 
 	move_and_slide() # move and slide makes the player move
 
@@ -76,6 +86,9 @@ func _physics_process(delta: float) -> void:
 func jump():
 	velocity.y = jump_vel
 	can_jump = false
+	buffer_timer.stop()
+	if not Input.is_action_pressed('jump'):
+		short_jump = true
 
 
 # set can_jump to false if you run out of coyote time

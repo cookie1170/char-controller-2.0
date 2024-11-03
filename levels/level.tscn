@@ -1,10 +1,10 @@
 [gd_scene load_steps=5 format=4 uid="uid://0y71pn6xlwny"]
 
-[ext_resource type="Texture2D" uid="uid://38bbgfs645hi" path="res://icon.svg" id="1_72sws"]
-[ext_resource type="PackedScene" uid="uid://cdaudi416meeb" path="res://player.tscn" id="2_erx3y"]
+[ext_resource type="PackedScene" uid="uid://cdaudi416meeb" path="res://player/player.tscn" id="1_sx5hw"]
+[ext_resource type="Texture2D" uid="uid://38bbgfs645hi" path="res://icon.svg" id="2_rsd62"]
 
 [sub_resource type="TileSetAtlasSource" id="TileSetAtlasSource_epuus"]
-texture = ExtResource("1_72sws")
+texture = ExtResource("2_rsd62")
 texture_region_size = Vector2i(128, 128)
 0:0/0 = 0
 0:0/0/physics_layer_0/polygon_0/points = PackedVector2Array(-64, -64, 64, -64, 64, 64, -64, 64)
@@ -16,7 +16,7 @@ sources/0 = SubResource("TileSetAtlasSource_epuus")
 
 [node name="level" type="Node2D"]
 
-[node name="Player" parent="." instance=ExtResource("2_erx3y")]
+[node name="Player" parent="." instance=ExtResource("1_sx5hw")]
 position = Vector2(0, -64)
 
 [node name="Camera2D" type="Camera2D" parent="Player"]

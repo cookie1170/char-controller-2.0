@@ -1,6 +1,6 @@
 [gd_scene load_steps=5 format=3 uid="uid://cdaudi416meeb"]
 
-[ext_resource type="Script" path="res://player.gd" id="1_1cjjo"]
+[ext_resource type="Script" path="res://player/player.gd" id="1_1cjjo"]
 [ext_resource type="Texture2D" uid="uid://38bbgfs645hi" path="res://icon.svg" id="2_fdlkt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_h6bod"]
@@ -27,6 +27,7 @@ texture = ExtResource("2_fdlkt")
 shape = SubResource("CircleShape2D_h6bod")
 
 [node name="CollisionBoxFeet" type="CollisionShape2D" parent="."]
+unique_name_in_owner = true
 position = Vector2(0, 63)
 shape = SubResource("RectangleShape2D_0eumx")
 

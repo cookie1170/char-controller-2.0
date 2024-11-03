@@ -21,6 +21,7 @@ class_name Player
 
 ## nodes
 @onready var coyote_timer : Timer = %CoyoteTimer
+@onready var collision_feet : CollisionShape2D = %CollisionBoxFeet
 
 ## other variables
 var can_jump : bool
@@ -44,6 +45,12 @@ func _physics_process(delta: float) -> void:
 	# start the coyote timer if you're not on floor and you can jump
 	if not is_on_floor() and can_jump and coyote_timer.is_stopped():
 		coyote_timer.start()
+
+	# makes it so the feet collision box is only active while you're on the ground or falling
+	if not is_on_floor() and velocity.y <= 0:
+		collision_feet.disabled = true
+	if is_on_floor() or velocity.y > 0:
+		collision_feet.disabled = false	
 
 	# makes it so you can't go above terminal velocity
 	if velocity.y > terminal_velocity:

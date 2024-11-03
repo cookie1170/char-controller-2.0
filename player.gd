@@ -2,124 +2,53 @@ extends CharacterBody2D
 class_name Player
 
 
-## movement variables
+## movement variable exports
+@export_group('Movement variables')
 @export var jump_height : float
-@export var time_peak : float
-@export var time_fall : float
+@export var peak_time_sec : float
+@export var fall_time_sec : float
+@export var terminal_velocity : float
 @export var speed : float
-@export var accel_time : float
+@export var accel_time_sec : float
+@export var decel_time_sec : float
 
 ## math
-@onready var jump_vel : float = ((2.0 * jump_height) / time_peak) * -1.0
-@onready var jump_grav : float = ((-2.0 * jump_height) / (time_peak * time_peak)) * -1.0
-@onready var fall_grav : float = ((-2.0 * jump_height) / (time_fall * time_fall)) * -1.0
-@onready var accel : float = speed / accel_time
+@onready var jump_vel : float = (2.0 * jump_height) / peak_time_sec
+@onready var jump_grav : float = (-2.0 * jump_height) / (peak_time_sec ** 2)
+@onready var fall_grav : float = (-2.0 * jump_height) / (fall_time_sec ** 2)
+@onready var accel : float = speed / accel_time_sec
+@onready var decel : float = speed / decel_time_sec
 
+# processes physics (duh)
+func _physics_process(delta: float) -> void:
 
-## nodes
-@onready var sprite : Sprite2D = $Sprite
-@onready var jump_buffer : Timer = $JumpBuffer
-@onready var coyote_timer : Timer = $CoyoteTimer
-@onready var ledge_block : RayCast2D = $LedgeGrabRaycasts/HorizontalBlock
-@onready var ledge_hor : RayCast2D = $LedgeGrabRaycasts/HorizontalRaycast
-@onready var ledge_ver : RayCast2D = $LedgeGrabRaycasts/VerticalRaycast
-
-
-## other variables
-var grav_mult : float = 1.0
-var direction : int = 0
-var jump_buffered : bool = false
-var can_jump : bool = true
-
-
-func _physics_process(delta):
-
-	## accelerate towards input direction
-
-	velocity.x = move_toward(velocity.x, Input.get_axis('left', 'right') * speed, accel * delta)
-
-	if Input.is_action_just_pressed('left'):
-		sprite.flip_h = true
+	# sets gravity variable to equal jump gravity if you're going up
+	# and fall gravity if you're going down
+	var gravity = jump_grav if velocity.y < 0 else fall_grav
 	
-	if Input.is_action_just_pressed('right'):
-		sprite.flip_h = false
-
-	## adds gravity
-
-	if not is_on_floor():
-		velocity.y += get_grav() * grav_mult * delta
-
-	## jump with jump buffering and coyote time
-
-	if is_on_floor(): can_jump = true
-
-	if not is_on_floor() and coyote_timer.is_stopped():
-		coyote_timer.start()
-
-	if Input.is_action_just_pressed('jump'):
-		jump_buffered = true
-		jump_buffer.start()
-
-	if can_jump and jump_buffered: jump()
-
-
-	if get_ledge_pos() != Vector2(0, 0):
-		$LedgeMarkerTemp.global_position = get_ledge_pos()
-		$LedgeMarkerTemp.visible = true
+	# apply gravity
+	if not is_on_floor() and velocity.y <= terminal_velocity:
+		velocity.y += gravity * delta
+	# makes it so you can't go above terminal velocity
+	if velocity.y > terminal_velocity:
+		velocity.y = terminal_velocity
+	
+	var direction = Input.get_axis('left', 'right') # gets the input direction
+	
+	# accelerates you towards your speed times your input direction (between 1 and -1)
+	if direction:
+		velocity.x = move_toward(velocity.x, speed * direction, accel * delta)
+	# decelerates you if direction is null (equal to 0)
 	else:
-		$LedgeMarkerTemp.visible = false	
+		velocity.x = move_toward(velocity.x, 0, decel * delta)
 
-	
-	## slow for testing
-	if Input.is_action_just_pressed('slow'):
-		if Engine.time_scale == 1:
-			Engine.time_scale = 0.5
-		else:
-			Engine.time_scale = 1
+	# makes you jump if you press the jump button
+	if Input.is_action_just_pressed('jump') and is_on_floor():
+		jump()
+
+	move_and_slide() # move and slide makes the player move
 
 
-	move_and_slide()
-
-
-func jump() -> void:
+# sets your velocity to the jump velocity if called
+func jump():
 	velocity.y = jump_vel
-
-
-func get_grav() -> float:
-	## makes it so you use fall gravity only if you're well falling
-	return jump_grav if velocity.y < 0 else fall_grav
-
-
-func get_grav_mult() -> float:
-	if not Input.is_action_pressed('down'):
-		return 0.5 if velocity.y in range(-20, 20) else 1.0
-	else:
-		return 1.5
-	
-
-func get_ledge_pos() -> Vector2:
-	var ledge_pos = Vector2.ZERO
-
-	$LedgeGrabRaycasts.scale.x = 1.0 if not sprite.flip_h else -1.0
-
-	if ledge_hor.is_colliding():
-
-		ledge_ver.global_position.x = ledge_hor.get_collision_point().x
-		
-		if not ledge_block.is_colliding():
-			ledge_pos = ledge_ver.get_collision_point()
-		if ledge_block.is_colliding():
-			ledge_pos = Vector2.ZERO
-	else:
-		ledge_pos = Vector2.ZERO
-	
-
-	return ledge_pos
-
-
-func _on_jump_buffer_timeout() -> void:
-	jump_buffered = false
-
-
-func _on_coyote_timeout() -> void:
-	can_jump = false

@@ -4,56 +4,28 @@
 [ext_resource type="Texture2D" uid="uid://38bbgfs645hi" path="res://icon.svg" id="2_fdlkt"]
 
 [sub_resource type="CircleShape2D" id="CircleShape2D_h6bod"]
-radius = 15.0
+radius = 60.0
 
 [sub_resource type="RectangleShape2D" id="RectangleShape2D_0eumx"]
-size = Vector2(32, 2)
+size = Vector2(128, 2)
 
 [node name="Player" type="CharacterBody2D"]
 collision_layer = 2
 script = ExtResource("1_1cjjo")
-jump_height = 48.0
-time_peak = 0.3
-time_fall = 0.3
-speed = 240.0
-accel_time = 0.15
+jump_height = -280.0
+peak_time_sec = 0.3
+fall_time_sec = 0.25
+terminal_velocity = 3600.0
+speed = 960.0
+accel_time_sec = 0.15
+decel_time_sec = 0.1
 
 [node name="Sprite" type="Sprite2D" parent="."]
-scale = Vector2(0.25, 0.25)
 texture = ExtResource("2_fdlkt")
 
 [node name="CollisionBox" type="CollisionShape2D" parent="."]
 shape = SubResource("CircleShape2D_h6bod")
 
 [node name="CollisionBoxFeet" type="CollisionShape2D" parent="."]
-position = Vector2(0, 15)
+position = Vector2(0, 63)
 shape = SubResource("RectangleShape2D_0eumx")
-
-[node name="JumpBuffer" type="Timer" parent="."]
-wait_time = 0.1
-one_shot = true
-
-[node name="CoyoteTimer" type="Timer" parent="."]
-wait_time = 0.1
-one_shot = true
-
-[node name="LedgeGrabRaycasts" type="Node2D" parent="."]
-
-[node name="HorizontalRaycast" type="RayCast2D" parent="LedgeGrabRaycasts"]
-position = Vector2(16, 0)
-target_position = Vector2(16, 0)
-
-[node name="HorizontalBlock" type="RayCast2D" parent="LedgeGrabRaycasts"]
-position = Vector2(16, -16)
-target_position = Vector2(16, 0)
-
-[node name="VerticalRaycast" type="RayCast2D" parent="LedgeGrabRaycasts"]
-position = Vector2(0, -16)
-target_position = Vector2(0, 16)
-
-[node name="LedgeMarkerTemp" type="Sprite2D" parent="."]
-scale = Vector2(0.05, 0.05)
-texture = ExtResource("2_fdlkt")
-
-[connection signal="timeout" from="JumpBuffer" to="." method="_on_jump_buffer_timeout"]
-[connection signal="timeout" from="CoyoteTimer" to="." method="_on_coyote_timeout"]
